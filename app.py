@@ -344,7 +344,7 @@ HTML_PAGE = """
         </div>
         <div class="message-wrapper assistant-message">
             <div class="message">
-                <div class="message-label">Assistant</div>
+                <div class="message-label">NewCold Assistant</div>
                 <p>{{ answer|safe }}</p>
             </div>
         </div>
@@ -357,7 +357,7 @@ HTML_PAGE = """
                 name="query" 
                 rows="1" 
                 class="query-box" 
-                placeholder="Message Claude..."
+                placeholder="Ask Anything About NewCold Legal Queries..."
                 oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"
             >{{ query }}</textarea>
             <button type="submit" class="submit-button">Send</button>
@@ -367,8 +367,6 @@ HTML_PAGE = """
 </html>
 
 """
-
-app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -419,7 +417,9 @@ def load_and_embed_pdf():
     EMBEDDED_CLAUSES = embed_clauses_by_title(clause_pairs, EMBEDDING_MODEL)
     print(f"Embedded {len(EMBEDDED_CLAUSES)} clauses.")
 
+load_and_embed_pdf()
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    load_and_embed_pdf()
+    #load_and_embed_pdf()
     app.run(debug=True, host="0.0.0.0", port=port)
