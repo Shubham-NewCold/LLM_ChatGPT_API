@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dataset Chatbot (PaLM API)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chatbox { width: 80%; max-width: 600px; margin: 0 auto; }
+        .message { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .user { background-color: #DCF8C6; text-align: right; }
+        .bot { background-color: #F1F0F0; text-align: left; }
+        #inputForm { display: flex; margin-top: 20px; }
+        #inputText { flex: 1; padding: 10px; font-size: 16px; }
+        #sendBtn { padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="messages"></div>
+        <form id="inputForm">
+            <input type="text" id="inputText" placeholder="Ask a question about the dataset..." autocomplete="off" required />
+            <button type="submit" id="sendBtn">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById("inputForm");
+        const inputText = document.getElementById("inputText");
+        const messagesDiv = document.getElementById("messages");
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const message = inputText.value;
+            addMessage("user", message);
+            inputText.value = "";
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => addMessage("bot", data.reply))
+            .catch(error => addMessage("bot", "Error: " + error));
+        });
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message " + sender;
+            messageDiv.innerText = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
